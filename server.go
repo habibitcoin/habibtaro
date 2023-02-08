@@ -4,6 +4,7 @@ import (
 	"errors"
 	"html/template"
 	"io"
+	"os"
 
 	"github.com/habibitcoin/habibtaro/handler"
 	"github.com/labstack/echo"
@@ -78,5 +79,9 @@ func main() {
 	e.File("/favicon.ico", "static/images/favicon.ico")
 
 	// Start server
-	e.Logger.Fatal(e.Start(":1323"))
+	port := "1323"
+	if value, ok := os.LookupEnv("PORT"); ok {
+		port = value
+	}
+	e.Logger.Fatal(e.Start(":" + port))
 }

@@ -12,6 +12,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.12.0 // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/labstack/echo v3.3.10+incompatible // indirect
 	github.com/labstack/gommon v0.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect

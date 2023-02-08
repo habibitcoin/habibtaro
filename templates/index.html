@@ -5,10 +5,9 @@
         <div class="row justify-content-center">
             <div class="col-md-9 text-center">
                 <h2 class="heading-section mb-4 pb-md-3">
-                    Answer Questions, Get Bitcoin!
+                    
                 </h2>
-                <p>BuzzMe is a service that allows you to create a profile and charge a small amount of BTC to receive messages.<br>
-                Powered by the Lightning Network.</p>
+                <p>HabibTaro is still under development, but will allow you to view, mint, send, and receive Taro assets on BTC testnet (for now).</p>
             </div>
         </div>
     </div>
@@ -18,7 +17,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h2 class="heading-section mb-4">Featured Users</h2>
+                    <h2 class="heading-section mb-4">Featured Assets</h2>
                     <div class="row">
                         {{range .users}}
                         <div class="col-md-3 text-center">
@@ -42,21 +41,21 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h2 class="heading-section mb-4">Recent Paid Public Messages</h2>
+                    <h2 class="heading-section mb-4">Recent Taro Assets</h2>
                     <table border="1" style = "width: 100%">
                             <tbody>
                             <tr>
-                            <td><b>From</b></td>
-                            <td><b>To</b></td>
-                            <td><b>Message</b></td>
-                            <td><b>Sats Paid</b></td>
+                            <td><b>Name</b></td>
+                            <td><b>Genesis Point</b></td>
+                            <td><b>Genesis Bootstrap Info</b></td>
+                            <td><b>Amount</b></td>
                             </tr>
-                            {{range .posts}}
+                            {{range .assets}}
                             <tr>
-                            <td>{{if .From}} {{.From}} {{else}} Anonymous {{end}}</td>
-                            <td><a href="/{{ .To}}">{{.To}}</a></td>
-                            <td>{{.Message}}</td>
-                            <td>{{if .Sats}} {{.Sats}} {{else}} 1000 {{end}}</td>
+                            <td>{{.AssetGenesis.Name}}</td>
+                            <td><a href="https://mempool.space/testnet/tx/{{ .AssetGenesis.GenesisPoint}}">{{.AssetGenesis.GenesisPoint}}</a></td>
+                            <td>{{.AssetGenesis.GenesisBootstrapInfo}}</td>
+                            <td>{{.Amount}}</td>
                             </tr>
                             {{end}}
                             </tbody>

@@ -37,15 +37,9 @@ func NewClient(ctx context.Context) (client LightningClient) {
 		Transport: tr,
 	}
 	client = LightningClient{
-		Client:            httpClient,
-		Host:              config.LNDHost,
-		Macaroon:          loadMacaroon(ctx),
-		ExcludeDeezy:      config.ExcludeDeezyFromLiqOps,
-		DeezyClearnetHost: config.DeezyClearnetHost,
-		DeezyTorHost:      config.DeezyTorHost,
-		TimeoutSeconds:    config.PayTimeoutSeconds,
-		FeeRateSatsPerVb:  config.FeeRateSatsPerVb,
-		DeezyPeer:         config.DeezyPeer,
+		Client:   httpClient,
+		Host:     config.LNDHost,
+		Macaroon: loadMacaroon(ctx),
 	}
 
 	return client

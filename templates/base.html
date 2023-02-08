@@ -40,8 +40,8 @@
                               </button>
                               <div class="collapse navbar-collapse" id="ftco-nav">
                                 <ul class="navbar-nav ml-auto">
-                                  <li class="nav-item"><a href="/signup" class="nav-link icon d-flex align-items-center"><i class="ion-ios-person-add mr-2"></i> Mint</a></li>
-                                  <li class="nav-item"><a href="/login" class="nav-link icon d-flex align-items-center"><i class="ion-ios-log-in mr-2"></i> Proofs</a></li>
+                                  <li class="nav-item"><a target="_blank" href="https://twitter.com/habibitcoin" class="nav-link icon d-flex align-items-center"><i class="ion-logo-twitter mr-2"></i> @habibitcoin</a></li>
+                                  <li class="nav-item"><a target="_blank" href="https://github.com/habibitcoin/habibalancer" class="nav-link icon d-flex align-items-center"><i class="ion-logo-github mr-2"></i> GitHub/habibalancer</a></li>
                                 </ul>
                               </div>
                                   </div>
@@ -91,60 +91,6 @@
         <script src="/static/js/moment-with-locales.min.js"></script>
         <script src="/static/js/bootstrap-datetimepicker.min.js"></script>
         <script src="/static/js/main.js"></script>
-
-        <script>
-        $("document").ready(function() {
-
-        $('input[type=file]').on("change", function() {
-
-          var $files = $(this).get(0).files;
-
-          if ($files.length) {
-
-            // Reject big files
-            if ($files[0].size > $(this).data("max-size") * 1024) {
-              console.log("Please select a smaller file");
-              return false;
-            }
-
-            // Begin file upload
-            console.log("Uploading file to Imgur..");
-
-            // Replace ctrlq with your own API key
-            var apiUrl = 'https://api.imgur.com/3/image';
-            var apiKey = 'd0e91e57a098721';
-
-            var settings = {
-              async: false,
-              crossDomain: true,
-              processData: false,
-              contentType: false,
-              type: 'POST',
-              url: apiUrl,
-              headers: {
-                Authorization: 'Client-ID ' + apiKey,
-                Accept: 'application/json'
-              },
-              mimeType: 'multipart/form-data'
-            };
-
-            var formData = new FormData();
-            formData.append("image", $files[0]);
-            settings.data = formData;
-
-            // Response contains stringified JSON
-            // Image URL available at response.data.link
-            $.ajax(settings).done(function(response) {
-              console.log(response);
-              var obj = jQuery.parseJSON(response);
-              console.log(obj);
-              // console.log(response.data.link);
-              $('input[name="avatar"]').val(obj.data.link);
-            });
-
-          }
-        });
-        });</script>
 
         </body>
 </html>

@@ -1,0 +1,23 @@
+
+{{define "body"}}
+<section class="ftco-section pb-0">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 heading-title">
+                    <h1>Generate a Taro Receive Address</h1><br>
+                    <p>New address:</p><br>
+                    <p>{{.address.Address}}</p>
+                    <form method="POST">
+                        <label>Genesis Bootstrap Info:</label><br />
+                        <input type="text" name="genesis_bootstrap_info" required><br />
+                        <label>Group Key (optional):</label><br />
+                        <input type="number" name="group_key"><br />
+                        <label>Amount:</label><br />
+                        <input type="text" name="amt" required><br />
+                        <input type="submit">
+                    </form>
+          </div>
+        </div>
+    </div>
+</section>
+{{end}}

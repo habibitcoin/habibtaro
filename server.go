@@ -33,6 +33,7 @@ func main() {
 	templates := make(map[string]*template.Template)
 	templates["index.html"] = template.Must(template.ParseFiles("templates/index.html", "templates/base.html"))
 	templates["signup.html"] = template.Must(template.ParseFiles("templates/signup.html", "templates/base.html"))
+	templates["address.html"] = template.Must(template.ParseFiles("templates/address.html", "templates/base.html"))
 	templates["user.html"] = template.Must(template.ParseFiles("templates/user.html", "templates/base.html"))
 	templates["login.html"] = template.Must(template.ParseFiles("templates/login.html", "templates/base.html"))
 	templates["dashboard.html"] = template.Must(template.ParseFiles("templates/dashboard.html", "templates/base.html"))
@@ -60,6 +61,7 @@ func main() {
 
 	// Routes
 	e.GET("/", h.Index)
+	e.GET("/address", h.ViewAddress)
 	e.GET("/post/:id", h.FetchPost)
 	e.GET("/dashboard", h.Dashboard)
 	e.GET("/list", h.ListUsers)
@@ -69,6 +71,7 @@ func main() {
 
 	e.PUT("/dashboard", h.UpdateUser)
 
+	e.POST("/address", h.Address)
 	e.POST("/post", h.CheckPost)
 	e.POST("/signup", h.Signup)
 	e.POST("/login", h.Login)

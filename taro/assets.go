@@ -59,7 +59,6 @@ func (client *TaroClient) ListAssets() (assets TaroAssetsResponse, err error) {
 	}
 
 	for i, a := range assets.TaroAssets {
-		log.Println(hex.EncodeToString([]byte(a.AssetGenesis.GenesisBootstrapInfo)))
 		str, _ := base64.StdEncoding.DecodeString(a.AssetGenesis.GenesisBootstrapInfo)
 		assets.TaroAssets[i].AssetGenesis.GenesisBootstrapInfo = hex.EncodeToString(str)
 		str, _ = base64.StdEncoding.DecodeString(a.AssetGenesis.Meta)
@@ -77,18 +76,3 @@ func (client *TaroClient) ListAssets() (assets TaroAssetsResponse, err error) {
 
 	return assets, err
 }
-
-/*func (a *TaroAssetResponse) UnmarshalJSON(data []byte) error {
-	if err := json.Unmarshal(data, &a); err != nil {
-		return err
-	}
-
-	a.AssetGenesis.GenesisBootstrapInfo = hex.EncodeToString([]byte(a.AssetGenesis.GenesisBootstrapInfo))
-	a.AssetGenesis.Meta = hex.EncodeToString([]byte(a.AssetGenesis.Meta))
-	a.AssetGenesis.AssetID = hex.EncodeToString([]byte(a.AssetGenesis.AssetID))
-	a.ScriptKey = hex.EncodeToString([]byte(a.ScriptKey))
-	a.ChainAnchor.AnchorTx = hex.EncodeToString([]byte(a.ChainAnchor.AnchorTx))
-	a.ChainAnchor.InternalKey = hex.EncodeToString([]byte(a.ChainAnchor.InternalKey))
-
-	return nil
-}*/

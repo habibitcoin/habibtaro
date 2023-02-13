@@ -27,8 +27,6 @@ func (h *Handler) Address(c echo.Context) (err error) {
 		log.Println(err)
 	}
 
-	log.Println(resp.Address)
-
 	return c.Render(http.StatusOK, "address.html", map[string]interface{}{
 		"address": resp,
 	})

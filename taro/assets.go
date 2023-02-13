@@ -40,6 +40,27 @@ type TaroAssetResponse struct {
 	PrevWitnesses []interface{} `json:"prev_witnesses"`
 }
 
+func (client *TaroClient) GetAsset(assetName string) (assetResponse TaroAssetResponse, err error) {
+	var assets TaroAssetsResponse
+	if len(client.CachedAssetResponse.TaroAssets) == 0 {
+		assets, err = client.ListAssets()
+		if err != nil {
+			return assetResponse, nil
+		}
+	} else {
+		assets = client.CachedAssetResponse
+	}
+
+	for _, asset := range assets.TaroAssets {
+		if asset.AssetGenesis.Name == assetName {
+			assetResponse = asset
+			break
+		}
+	}
+
+	return assetResponse, err
+}
+
 func (client *TaroClient) ListAssets() (assets TaroAssetsResponse, err error) {
 	resp, err := client.sendGetRequest("v1/taro/assets")
 	if err != nil {
@@ -62,17 +83,19 @@ func (client *TaroClient) ListAssets() (assets TaroAssetsResponse, err error) {
 		str, _ := base64.StdEncoding.DecodeString(a.AssetGenesis.GenesisBootstrapInfo)
 		assets.TaroAssets[i].AssetGenesis.GenesisBootstrapInfo = hex.EncodeToString(str)
 		str, _ = base64.StdEncoding.DecodeString(a.AssetGenesis.Meta)
-		a.AssetGenesis.Meta = hex.EncodeToString(str)
+		assets.TaroAssets[i].AssetGenesis.Meta = hex.EncodeToString(str)
 		str, _ = base64.StdEncoding.DecodeString(a.AssetGenesis.GenesisBootstrapInfo)
-		a.AssetGenesis.AssetID = hex.EncodeToString(str)
+		assets.TaroAssets[i].AssetGenesis.AssetID = hex.EncodeToString(str)
 		str, _ = base64.StdEncoding.DecodeString(a.ScriptKey)
-		a.ScriptKey = hex.EncodeToString(str)
+		assets.TaroAssets[i].ScriptKey = hex.EncodeToString(str)
 		str, _ = base64.StdEncoding.DecodeString(a.ChainAnchor.AnchorTx)
-		a.ChainAnchor.AnchorTx = hex.EncodeToString(str)
+		assets.TaroAssets[i].ChainAnchor.AnchorTx = hex.EncodeToString(str)
 		str, _ = base64.StdEncoding.DecodeString(a.ChainAnchor.InternalKey)
-		a.ChainAnchor.InternalKey = hex.EncodeToString(str)
+		assets.TaroAssets[i].ChainAnchor.InternalKey = hex.EncodeToString(str)
 
 	}
+
+	client.CachedAssetResponse = assets
 
 	return assets, err
 }

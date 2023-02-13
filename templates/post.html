@@ -24,49 +24,7 @@
   </section>
 <section class="ftco-section pb-0">
         <div class="container" style="align-content:center">
-            <div class="row">
-                <div class="col-md-12 heading-title">
-                    <div class="col-md-3 text-center">
-                            <table border="1" style = "width: 600px; table-layout: fixed; word-wrap: break-word;">
-                                    <tbody>
-                                    <tr>
-                                    <td><b>ID:</b></td>
-                                    <td>{{.id}}</td>
-                                    </tr>
-                                    <tr>
-                                    <td><b>From:</b></td>
-                                    <td>{{.from}}</td>
-                                    </tr>
-                                    <tr>
-                                    <td><b>To:</b></td>
-                                    <td>{{.to}}</td>
-                                    </tr>
-                                    <tr>
-                                    <td><b>Payment Request QR:</b></td>
-                                    <td><img src="https://api.qrserver.com/v1/create-qr-code/?data={{.paymentRequest}}&amp;size=300x300" alt="" width="150" height="150" /></td>
-                                    </tr>
-                                    <tr>
-                                    <td><b>Payment Request:</b></td>
-                                    <td>{{.paymentRequest}}</td>
-                                    </tr>
-                                    <tr>
-                                    <td><b>Message:</b></td>
-                                    <td>{{.message}}</td>
-                                    </tr>
-                                    <tr>
-                                    <td><b>Paid:</b></td>
-                                    <td>{{.paid}}</td>
-                                    </tr>
-                                    </tbody>
-                                    </table>
-                    </div>
-
-
-                    <form method="POST" action="/post">
-                        <input type="hidden" name="to" value="{{.id}}" required><br />
-                        <input type="submit" value="Mark Paid">
-                    </form>
-          </div>
+            <p>{{.asset}}</p>
         </div>
     </div>
 </section>

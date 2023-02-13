@@ -56,8 +56,8 @@
                             </tr>
                             {{range .assets}}
                             <tr>
-                            <td>{{.AssetGenesis.Name}}</td>
-                            <td><a href="https://mempool.space/testnet/tx/{{ .AssetGenesis.GenesisPoint}}">{{.AssetGenesis.GenesisPoint}}</a></td>
+                            <td><a href="/asset/{{ .AssetGenesis.Name}}">{{.AssetGenesis.Name}}</a></td>
+                            <td><a target="_blank" href="https://mempool.space/testnet/tx/{{ .AssetGenesis.GenesisPoint}}">{{.AssetGenesis.GenesisPoint}}</a></td>
                             <td>{{.AssetGenesis.GenesisBootstrapInfo}}</td>
                             <td>{{.Amount}}</td>
                             </tr>

@@ -14,10 +14,11 @@ import (
 )
 
 type TaroClient struct {
-	Client   *http.Client
-	Host     string
-	Macaroon string
-	Context  context.Context
+	Client              *http.Client
+	Host                string
+	Macaroon            string
+	Context             context.Context
+	CachedAssetResponse TaroAssetsResponse
 }
 
 // func NewTaroClient

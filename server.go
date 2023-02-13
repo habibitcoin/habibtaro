@@ -34,6 +34,7 @@ func main() {
 	templates["index.html"] = template.Must(template.ParseFiles("templates/index.html", "templates/base.html"))
 	templates["signup.html"] = template.Must(template.ParseFiles("templates/signup.html", "templates/base.html"))
 	templates["address.html"] = template.Must(template.ParseFiles("templates/address.html", "templates/base.html"))
+	templates["asset.html"] = template.Must(template.ParseFiles("templates/asset.html", "templates/base.html"))
 	templates["user.html"] = template.Must(template.ParseFiles("templates/user.html", "templates/base.html"))
 	templates["login.html"] = template.Must(template.ParseFiles("templates/login.html", "templates/base.html"))
 	templates["dashboard.html"] = template.Must(template.ParseFiles("templates/dashboard.html", "templates/base.html"))
@@ -62,7 +63,7 @@ func main() {
 	// Routes
 	e.GET("/", h.Index)
 	e.GET("/address", h.ViewAddress)
-	e.GET("/post/:id", h.FetchPost)
+	e.GET("/asset/:name", h.FetchAsset)
 	e.GET("/dashboard", h.Dashboard)
 	e.GET("/list", h.ListUsers)
 	e.GET("/:username", h.FetchUser)

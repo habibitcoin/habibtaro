@@ -1,8 +1,6 @@
 package taro
 
 import (
-	"encoding/base64"
-	"encoding/hex"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -61,6 +59,91 @@ func (client *TaroClient) GetAsset(assetName string) (assetResponse TaroAssetRes
 	return assetResponse, err
 }
 
+type TaroExportProofRequest struct {
+	AssetId   string `json:"asset_id"`
+	ScriptKey string `json:"script_key"`
+}
+
+type TaroDecodeProofRequest struct {
+	RawProof string `json:"raw_proof"`
+	// proofindex
+}
+
+type TaroProofResponse struct {
+	Proof TaroProof `json:"decoded_proof"`
+}
+
+type TaroProof struct {
+	ProofIndex      string            `json:"proof_index"`
+	NumberOfProofs  string            `json:"number_of_proofs"`
+	Asset           TaroAssetResponse `json:"asset"`
+	TxMerkleProof   string            `json:"tx_merkle_proof"`
+	InclusionProof  string            `json:"inclusion_proof"`
+	ExclusionProofs []string          `json:"exclusion_proofs"`
+}
+
+func (client *TaroClient) GetAssetProof(assetName string) (proofResponse TaroProofResponse, err error) {
+	var assets TaroAssetsResponse
+	var asset TaroAssetResponse
+	if len(client.CachedAssetResponse.TaroAssets) == 0 {
+		assets, err = client.ListAssets()
+		if err != nil {
+			return proofResponse, nil
+		}
+	} else {
+		assets = client.CachedAssetResponse
+	}
+
+	for _, a := range assets.TaroAssets {
+		if a.AssetGenesis.Name == assetName {
+			asset = a
+			break
+		}
+	}
+
+	var encodedProof TaroDecodeProofRequest
+	resp, err := client.sendPostRequestJSON("v1/taro/proofs/export", &TaroExportProofRequest{
+		asset.AssetGenesis.AssetID,
+		asset.ScriptKey,
+	})
+	if err != nil {
+		log.Println(err)
+		return proofResponse, err
+	}
+
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Println(err)
+		return proofResponse, err
+	}
+
+	if err := json.Unmarshal(bodyBytes, &encodedProof); err != nil {
+		log.Println(err)
+		return proofResponse, err
+	}
+
+	resp, err = client.sendPostRequestJSON("v1/taro/proofs/decode", &TaroDecodeProofRequest{
+		encodedProof.RawProof,
+	})
+	if err != nil {
+		log.Println(err)
+		return proofResponse, err
+	}
+
+	bodyBytes, err = ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Println(err)
+		return proofResponse, err
+	}
+
+	if err := json.Unmarshal(bodyBytes, &proofResponse); err != nil {
+		log.Println(err)
+		return proofResponse, err
+	}
+
+	return proofResponse, err
+}
+
 func (client *TaroClient) ListAssets() (assets TaroAssetsResponse, err error) {
 	resp, err := client.sendGetRequest("v1/taro/assets")
 	if err != nil {
@@ -77,22 +160,6 @@ func (client *TaroClient) ListAssets() (assets TaroAssetsResponse, err error) {
 	if err := json.Unmarshal(bodyBytes, &assets); err != nil {
 		log.Println(err)
 		return assets, err
-	}
-
-	for i, a := range assets.TaroAssets {
-		str, _ := base64.StdEncoding.DecodeString(a.AssetGenesis.GenesisBootstrapInfo)
-		assets.TaroAssets[i].AssetGenesis.GenesisBootstrapInfo = hex.EncodeToString(str)
-		str, _ = base64.StdEncoding.DecodeString(a.AssetGenesis.Meta)
-		assets.TaroAssets[i].AssetGenesis.Meta = hex.EncodeToString(str)
-		str, _ = base64.StdEncoding.DecodeString(a.AssetGenesis.GenesisBootstrapInfo)
-		assets.TaroAssets[i].AssetGenesis.AssetID = hex.EncodeToString(str)
-		str, _ = base64.StdEncoding.DecodeString(a.ScriptKey)
-		assets.TaroAssets[i].ScriptKey = hex.EncodeToString(str)
-		str, _ = base64.StdEncoding.DecodeString(a.ChainAnchor.AnchorTx)
-		assets.TaroAssets[i].ChainAnchor.AnchorTx = hex.EncodeToString(str)
-		str, _ = base64.StdEncoding.DecodeString(a.ChainAnchor.InternalKey)
-		assets.TaroAssets[i].ChainAnchor.InternalKey = hex.EncodeToString(str)
-
 	}
 
 	client.CachedAssetResponse = assets

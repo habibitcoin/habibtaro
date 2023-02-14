@@ -35,6 +35,10 @@ func (h *Handler) Index(c echo.Context) (err error) {
 		log.Println(err)
 	}
 
+	for i, a := range resp.TaroAssets {
+		resp.TaroAssets[i] = decodeAssetFields(a)
+	}
+
 	// Retrieve featured (first 4) users from database
 	users := []*model.PublicUser{}
 

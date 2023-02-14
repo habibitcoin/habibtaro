@@ -62,8 +62,6 @@ func (client *TaroClient) CreateAddress(genesisBootstrapInfo, groupKey, amt stri
 		return address, err
 	}
 
-	log.Println(string(bodyBytes))
-
 	if err := json.Unmarshal(bodyBytes, &address); err != nil {
 		log.Println(err)
 		return address, err

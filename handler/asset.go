@@ -85,11 +85,11 @@ func decodeProofFields(p taro.TaroProofResponse) (finalProof taro.TaroProofRespo
 }
 
 func decodeAssetFields(a taro.TaroAssetResponse) (finalAsset taro.TaroAssetResponse) {
-	str, _ := base64.StdEncoding.DecodeString(a.AssetGenesis.GenesisBootstrapInfo)
-	a.AssetGenesis.GenesisBootstrapInfo = hex.EncodeToString(str)
+	str, _ := base64.StdEncoding.DecodeString(a.AssetGenesis.GenesisPoint)
+	a.AssetGenesis.GenesisPoint = hex.EncodeToString(str)
 	str, _ = base64.StdEncoding.DecodeString(a.AssetGenesis.Meta)
 	a.AssetGenesis.Meta = hex.EncodeToString(str)
-	str, _ = base64.StdEncoding.DecodeString(a.AssetGenesis.GenesisBootstrapInfo)
+	str, _ = base64.StdEncoding.DecodeString(a.AssetGenesis.AssetID)
 	a.AssetGenesis.AssetID = hex.EncodeToString(str)
 	str, _ = base64.StdEncoding.DecodeString(a.ScriptKey)
 	a.ScriptKey = hex.EncodeToString(str)

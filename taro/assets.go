@@ -13,13 +13,12 @@ type TaroAssetsResponse struct {
 type TaroAssetResponse struct {
 	Version      int `json:"version"`
 	AssetGenesis struct {
-		GenesisPoint         string `json:"genesis_point"`
-		Name                 string `json:"name"`
-		Meta                 string `json:"meta"`
-		AssetID              string `json:"asset_id"`
-		OutputIndex          int    `json:"output_index"`
-		GenesisBootstrapInfo string `json:"genesis_bootstrap_info"`
-		Version              int    `json:"version"`
+		GenesisPoint string `json:"genesis_point"`
+		Name         string `json:"name"`
+		Meta         string `json:"meta_hash"`
+		AssetID      string `json:"asset_id"`
+		OutputIndex  int    `json:"output_index"`
+		Version      int    `json:"version"`
 	} `json:"asset_genesis"`
 	AssetType        string `json:"asset_type"`
 	Amount           string `json:"amount"`
@@ -27,15 +26,19 @@ type TaroAssetResponse struct {
 	RelativeLockTime int    `json:"relative_lock_time"`
 	ScriptVersion    int    `json:"script_version"`
 	ScriptKey        string `json:"script_key"`
+	ScriptKeyIsLocal bool   `json:"script_key_is_local"`
 	AssetGroup       string `json:"asset_group"`
 	ChainAnchor      struct {
-		AnchorTx        string `json:"anchor_tx"`
-		AnchorTxid      string `json:"anchor_txid"`
-		AnchorBlockHash string `json:"anchor_block_hash"`
-		AnchorOutpoint  string `json:"anchor_outpoint"`
-		InternalKey     string `json:"internal_key"`
+		AnchorTx         string `json:"anchor_tx"`
+		AnchorTxid       string `json:"anchor_txid"`
+		AnchorBlockHash  string `json:"anchor_block_hash"`
+		AnchorOutpoint   string `json:"anchor_outpoint"`
+		InternalKey      string `json:"internal_key"`
+		MerkleRoot       string `json:"merkle_root"`
+		TapscriptSibling string `json:"tapscript_sibling"`
 	} `json:"chain_anchor"`
 	PrevWitnesses []interface{} `json:"prev_witnesses"`
+	IsSpent       bool          `json:"is_spent"`
 }
 
 func (client *TaroClient) GetAsset(assetName string) (assetResponse TaroAssetResponse, err error) {
@@ -102,7 +105,7 @@ func (client *TaroClient) GetAssetProof(assetName string) (proofResponse TaroPro
 	}
 
 	var encodedProof TaroDecodeProofRequest
-	resp, err := client.sendPostRequestJSON("v1/taro/proofs/export", &TaroExportProofRequest{
+	resp, err := client.sendPostRequestJSON("v1/taproot-assets/proofs/export", &TaroExportProofRequest{
 		asset.AssetGenesis.AssetID,
 		asset.ScriptKey,
 	})
@@ -122,7 +125,7 @@ func (client *TaroClient) GetAssetProof(assetName string) (proofResponse TaroPro
 		return proofResponse, err
 	}
 
-	resp, err = client.sendPostRequestJSON("v1/taro/proofs/decode", &TaroDecodeProofRequest{
+	resp, err = client.sendPostRequestJSON("v1/taproot-assets/proofs/decode", &TaroDecodeProofRequest{
 		encodedProof.RawProof,
 	})
 	if err != nil {
@@ -145,7 +148,7 @@ func (client *TaroClient) GetAssetProof(assetName string) (proofResponse TaroPro
 }
 
 func (client *TaroClient) ListAssets() (assets TaroAssetsResponse, err error) {
-	resp, err := client.sendGetRequest("v1/taro/assets")
+	resp, err := client.sendGetRequest("v1/taproot-assets/assets")
 	if err != nil {
 		log.Println(err)
 		return assets, err

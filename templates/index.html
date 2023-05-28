@@ -51,14 +51,14 @@
                             <tr>
                             <td><b>Name</b></td>
                             <td><b>Genesis Point</b></td>
-                            <td><b>Genesis Bootstrap Info</b></td>
+                            <td><b>Asset Id</b></td>
                             <td><b>Amount</b></td>
                             </tr>
                             {{range .assets}}
                             <tr>
                             <td><a href="/asset/{{ .AssetGenesis.Name}}">{{.AssetGenesis.Name}}</a></td>
                             <td><a target="_blank" href="https://mempool.space/testnet/tx/{{ .AssetGenesis.GenesisPoint}}">{{.AssetGenesis.GenesisPoint}}</a></td>
-                            <td>{{.AssetGenesis.GenesisBootstrapInfo}}</td>
+                            <td>{{.AssetGenesis.AssetID}}</td>
                             <td>{{.Amount}}</td>
                             </tr>
                             {{end}}

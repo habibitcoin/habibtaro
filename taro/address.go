@@ -46,7 +46,7 @@ func (client *TaroClient) CreateAddress(genesisBootstrapInfo, groupKey, amt stri
 		groupKey = base64.URLEncoding.EncodeToString(groupKeyHex)
 	}
 
-	resp, err := client.sendPostRequestJSON("v1/taro/addrs", &TaroAddressRequest{
+	resp, err := client.sendPostRequestJSON("v1/taproot-assets/addrs", &TaroAddressRequest{
 		genesisBootstrapInfo,
 		groupKey,
 		amt,

@@ -32,7 +32,7 @@ func (h *Handler) FetchAsset(c echo.Context) (err error) {
 		return err
 	}
 
-	// resp = decodeAssetFields(resp)
+	resp = decodeAssetFields(resp)
 
 	str, _ := json.MarshalIndent(resp, "", "\t")
 
@@ -60,7 +60,7 @@ func (h *Handler) FetchAssetProof(c echo.Context) (err error) {
 		return err
 	}
 
-	// resp = decodeProofFields(resp)
+	resp = decodeProofFields(resp)
 
 	reader := base64.NewDecoder(base64.StdEncoding, strings.NewReader(resp.Proof.MetaReveal.Data))
 	_, format, err := image.Decode(reader)
@@ -84,7 +84,7 @@ func (h *Handler) FetchAssetProof(c echo.Context) (err error) {
 func decodeProofFields(p taro.TaroProofResponse) (finalProof taro.TaroProofResponse) {
 	str, _ := hex.DecodeString(p.Proof.MetaReveal.Data)
 	p.Proof.MetaReveal.Data = base64.StdEncoding.EncodeToString(str)
-	str, _ = base64.StdEncoding.DecodeString(p.Proof.TxMerkleProof)
+	/*str, _ = base64.StdEncoding.DecodeString(p.Proof.TxMerkleProof)
 	p.Proof.TxMerkleProof = hex.EncodeToString(str)
 	str, _ = base64.StdEncoding.DecodeString(p.Proof.InclusionProof)
 	p.Proof.InclusionProof = hex.EncodeToString(str)
@@ -92,13 +92,13 @@ func decodeProofFields(p taro.TaroProofResponse) (finalProof taro.TaroProofRespo
 		str, _ = base64.StdEncoding.DecodeString(e)
 		p.Proof.ExclusionProofs[i] = hex.EncodeToString(str)
 	}
-	p.Proof.Asset = decodeAssetFields(p.Proof.Asset)
+	p.Proof.Asset = decodeAssetFields(p.Proof.Asset)*/
 
 	return p
 }
 
 func decodeAssetFields(a taro.TaroAssetResponse) (finalAsset taro.TaroAssetResponse) {
-	str, _ := base64.StdEncoding.DecodeString(a.AssetGenesis.GenesisPoint)
+	/*str, _ := base64.StdEncoding.DecodeString(a.AssetGenesis.GenesisPoint)
 	a.AssetGenesis.GenesisPoint = hex.EncodeToString(str)
 	str, _ = base64.StdEncoding.DecodeString(a.AssetGenesis.Meta)
 	a.AssetGenesis.Meta = hex.EncodeToString(str)
@@ -109,7 +109,7 @@ func decodeAssetFields(a taro.TaroAssetResponse) (finalAsset taro.TaroAssetRespo
 	str, _ = base64.StdEncoding.DecodeString(a.ChainAnchor.AnchorTx)
 	a.ChainAnchor.AnchorTx = hex.EncodeToString(str)
 	str, _ = base64.StdEncoding.DecodeString(a.ChainAnchor.InternalKey)
-	a.ChainAnchor.InternalKey = hex.EncodeToString(str)
+	a.ChainAnchor.InternalKey = hex.EncodeToString(str)*/
 
 	return a
 }

@@ -45,7 +45,39 @@ type TaroAssetResponse struct {
 			Amount      string `json:"amount"`
 		} `json:"prev_id"`
 		TxWitness       []string `json:"tx_witness"`
-		SplitCommitment string   `json:"split_commitment"`
+		SplitCommitment struct {
+			RootAsset struct {
+				Version      int `json:"version"`
+				AssetGenesis struct {
+					GenesisPoint string `json:"genesis_point"`
+					Name         string `json:"name"`
+					MetaHash     string `json:"meta_hash"`
+					AssetID      string `json:"asset_id"`
+					OutputIndex  int    `json:"output_index"`
+					Version      int    `json:"version"`
+				} `json:"asset_genesis"`
+				AssetType        string      `json:"asset_type"`
+				Amount           string      `json:"amount"`
+				LockTime         int         `json:"lock_time"`
+				RelativeLockTime int         `json:"relative_lock_time"`
+				ScriptVersion    int         `json:"script_version"`
+				ScriptKey        string      `json:"script_key"`
+				ScriptKeyIsLocal bool        `json:"script_key_is_local"`
+				AssetGroup       interface{} `json:"asset_group"`
+				ChainAnchor      interface{} `json:"chain_anchor"`
+				PrevWitnesses    []struct {
+					PrevID struct {
+						AnchorPoint string `json:"anchor_point"`
+						AssetID     string `json:"asset_id"`
+						ScriptKey   string `json:"script_key"`
+						Amount      string `json:"amount"`
+					} `json:"prev_id"`
+					TxWitness       []string    `json:"tx_witness"`
+					SplitCommitment interface{} `json:"split_commitment"`
+				} `json:"prev_witnesses"`
+				IsSpent bool `json:"is_spent"`
+			} `json:"root_asset"`
+		} `json:"split_commitment"`
 	} `json:"prev_witnesses"`
 	IsSpent bool `json:"is_spent"`
 }

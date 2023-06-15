@@ -9,9 +9,10 @@ import (
 )
 
 type TaroAddressRequest struct {
-	BootstrapInfo string `json:"genesis_bootstrap_info" form:"genesis_bootstrap_info" bson:"genesis_bootstrap_info"`
-	GroupKey      string `json:"group_key" form:"group_key" bson:"group_key"`
-	Amount        string `json:"amt" form:"amt" bson:"amt"`
+	AssetId string `json:"asset_id" form:"asset_id" bson:"asset_id"`
+	Amount  string `json:"amt" form:"amt" bson:"amt"`
+	// ScriptKey   string `json:"script_key" form:"script_key" bson:"script_key"`
+	// InternalKey string `json:"internal_key" form:"internal_key" bson:"internal_key"`
 }
 
 type TaroAddressesResponse struct {
@@ -29,27 +30,25 @@ type TaroAddressResponse struct {
 	TaprootOutputKey string `json:"taproot_output_key"`
 }
 
-func (client *TaroClient) CreateAddress(genesisBootstrapInfo, groupKey, amt string) (address TaroAddressResponse, err error) {
-	log.Println(genesisBootstrapInfo)
-	bootstrapHex, err := hex.DecodeString(genesisBootstrapInfo)
+func (client *TaroClient) CreateAddress(assetId, amt string) (address TaroAddressResponse, err error) {
+	log.Println(assetId)
+	bootstrapHex, err := hex.DecodeString(assetId)
 	if err != nil {
 		return address, err
 	}
-	genesisBootstrapInfo = base64.URLEncoding.EncodeToString(bootstrapHex)
-	log.Println(genesisBootstrapInfo)
+	assetId = base64.URLEncoding.EncodeToString(bootstrapHex)
+	log.Println(assetId)
 
-	if groupKey != "" {
+	/*if groupKey != "" {
 		groupKeyHex, err := hex.DecodeString(groupKey)
 		if err != nil {
 			return address, err
 		}
 		groupKey = base64.URLEncoding.EncodeToString(groupKeyHex)
-	}
+	}*/
 
 	resp, err := client.sendPostRequestJSON("v1/taproot-assets/addrs", &TaroAddressRequest{
-		genesisBootstrapInfo,
-		groupKey,
-		amt,
+		assetId, amt,
 	})
 	if err != nil {
 		log.Println(err)
@@ -67,7 +66,7 @@ func (client *TaroClient) CreateAddress(genesisBootstrapInfo, groupKey, amt stri
 		return address, err
 	}
 
-	str, _ := base64.StdEncoding.DecodeString(address.AssetId)
+	/*str, _ := base64.StdEncoding.DecodeString(address.AssetId)
 	address.AssetId = hex.EncodeToString(str)
 	str, _ = base64.StdEncoding.DecodeString(address.GroupKey)
 	address.GroupKey = hex.EncodeToString(str)
@@ -76,7 +75,7 @@ func (client *TaroClient) CreateAddress(genesisBootstrapInfo, groupKey, amt stri
 	str, _ = base64.StdEncoding.DecodeString(address.InternalKey)
 	address.InternalKey = hex.EncodeToString(str)
 	str, _ = base64.StdEncoding.DecodeString(address.TaprootOutputKey)
-	address.TaprootOutputKey = hex.EncodeToString(str)
+	address.TaprootOutputKey = hex.EncodeToString(str)*/
 
 	return address, err
 }

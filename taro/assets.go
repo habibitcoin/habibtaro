@@ -37,8 +37,17 @@ type TaroAssetResponse struct {
 		MerkleRoot       string `json:"merkle_root"`
 		TapscriptSibling string `json:"tapscript_sibling"`
 	} `json:"chain_anchor"`
-	PrevWitnesses []interface{} `json:"prev_witnesses"`
-	IsSpent       bool          `json:"is_spent"`
+	PrevWitnesses []struct {
+		PrevId struct {
+			AnchorPoint string `json:"anchor_point"`
+			AssetId     string `json:"asset_id"`
+			ScriptKey   string `json:"script_key"`
+			Amount      string `json:"amount"`
+		} `json:"prev_id"`
+		TxWitness       []string `json:"tx_witness"`
+		SplitCommitment string   `json:"split_commitment"`
+	} `json:"prev_witnesses"`
+	IsSpent bool `json:"is_spent"`
 }
 
 func (client *TaroClient) GetAsset(assetName string) (assetResponse TaroAssetResponse, err error) {
@@ -68,7 +77,9 @@ type TaroExportProofRequest struct {
 }
 
 type TaroDecodeProofRequest struct {
-	RawProof string `json:"raw_proof"`
+	RawProof          string `json:"raw_proof"`
+	WithPrevWitnesses bool   `json:"with_prev_witnesses"`
+	WithMetaReveal    bool   `json:"with_meta_reveal"`
 	// proofindex
 }
 
@@ -77,12 +88,17 @@ type TaroProofResponse struct {
 }
 
 type TaroProof struct {
-	ProofIndex      string            `json:"proof_index"`
-	NumberOfProofs  string            `json:"number_of_proofs"`
-	Asset           TaroAssetResponse `json:"asset"`
-	TxMerkleProof   string            `json:"tx_merkle_proof"`
-	InclusionProof  string            `json:"inclusion_proof"`
-	ExclusionProofs []string          `json:"exclusion_proofs"`
+	ProofAtDepth   string            `json:"proof_at_depth"`
+	NumberOfProofs string            `json:"number_of_proofs"`
+	Asset          TaroAssetResponse `json:"asset"`
+	MetaReveal     struct {
+		Data     string `json:"data"`
+		Type     string `json:"type"`
+		MetaHash string `json:"meta_hash"`
+	} `json:"meta_reveal"`
+	TxMerkleProof   string   `json:"tx_merkle_proof"`
+	InclusionProof  string   `json:"inclusion_proof"`
+	ExclusionProofs []string `json:"exclusion_proofs"`
 }
 
 func (client *TaroClient) GetAssetProof(assetName string) (proofResponse TaroProofResponse, err error) {
@@ -103,6 +119,8 @@ func (client *TaroClient) GetAssetProof(assetName string) (proofResponse TaroPro
 			break
 		}
 	}
+
+	log.Println("hello2")
 
 	var encodedProof TaroDecodeProofRequest
 	resp, err := client.sendPostRequestJSON("v1/taproot-assets/proofs/export", &TaroExportProofRequest{
@@ -126,7 +144,7 @@ func (client *TaroClient) GetAssetProof(assetName string) (proofResponse TaroPro
 	}
 
 	resp, err = client.sendPostRequestJSON("v1/taproot-assets/proofs/decode", &TaroDecodeProofRequest{
-		encodedProof.RawProof,
+		encodedProof.RawProof, true, true,
 	})
 	if err != nil {
 		log.Println(err)
@@ -139,10 +157,14 @@ func (client *TaroClient) GetAssetProof(assetName string) (proofResponse TaroPro
 		return proofResponse, err
 	}
 
+	log.Println(string(bodyBytes))
+
 	if err := json.Unmarshal(bodyBytes, &proofResponse); err != nil {
 		log.Println(err)
 		return proofResponse, err
 	}
+
+	log.Println(proofResponse)
 
 	return proofResponse, err
 }
@@ -156,11 +178,13 @@ func (client *TaroClient) ListAssets() (assets TaroAssetsResponse, err error) {
 
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		log.Println("death")
 		log.Println(err)
 		return assets, err
 	}
 
 	if err := json.Unmarshal(bodyBytes, &assets); err != nil {
+		log.Println("death2")
 		log.Println(err)
 		return assets, err
 	}

@@ -21,7 +21,7 @@ func (h *Handler) Address(c echo.Context) (err error) {
 
 	c.Bind(a)
 
-	resp, err := taroClient.CreateAddress(a.BootstrapInfo, a.GroupKey, a.Amount)
+	resp, err := taroClient.CreateAddress(a.AssetId, a.Amount)
 	if err != nil {
 		log.Println("Error creating address")
 		log.Println(err)

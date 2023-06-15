@@ -5,7 +5,9 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"html/template"
+	"image"
 	"log"
 	"net/http"
 	"strings"
@@ -30,7 +32,7 @@ func (h *Handler) FetchAsset(c echo.Context) (err error) {
 		return err
 	}
 
-	resp = decodeAssetFields(resp)
+	// resp = decodeAssetFields(resp)
 
 	str, _ := json.MarshalIndent(resp, "", "\t")
 
@@ -58,7 +60,15 @@ func (h *Handler) FetchAssetProof(c echo.Context) (err error) {
 		return err
 	}
 
-	resp = decodeProofFields(resp)
+	// resp = decodeProofFields(resp)
+
+	reader := base64.NewDecoder(base64.StdEncoding, strings.NewReader(resp.Proof.MetaReveal.Data))
+	_, format, err := image.Decode(reader)
+	if err != nil {
+		fmt.Println("Not an image or unable to determine type:", err)
+	}
+
+	fmt.Println("Image format is:", format)
 
 	str, _ := json.MarshalIndent(resp, "", "\t")
 
@@ -67,11 +77,14 @@ func (h *Handler) FetchAssetProof(c echo.Context) (err error) {
 
 	return c.Render(http.StatusOK, "proof.html", map[string]interface{}{
 		"proof": template.HTML(str1),
+		"image": resp.Proof.MetaReveal.Data,
 	})
 }
 
 func decodeProofFields(p taro.TaroProofResponse) (finalProof taro.TaroProofResponse) {
-	str, _ := base64.StdEncoding.DecodeString(p.Proof.TxMerkleProof)
+	str, _ := hex.DecodeString(p.Proof.MetaReveal.Data)
+	p.Proof.MetaReveal.Data = base64.StdEncoding.EncodeToString(str)
+	str, _ = base64.StdEncoding.DecodeString(p.Proof.TxMerkleProof)
 	p.Proof.TxMerkleProof = hex.EncodeToString(str)
 	str, _ = base64.StdEncoding.DecodeString(p.Proof.InclusionProof)
 	p.Proof.InclusionProof = hex.EncodeToString(str)

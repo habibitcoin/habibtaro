@@ -1,8 +1,6 @@
 package taro
 
 import (
-	"encoding/base64"
-	"encoding/hex"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -31,14 +29,6 @@ type TaroAddressResponse struct {
 }
 
 func (client *TaroClient) CreateAddress(assetId, amt string) (address TaroAddressResponse, err error) {
-	log.Println(assetId)
-	bootstrapHex, err := hex.DecodeString(assetId)
-	if err != nil {
-		return address, err
-	}
-	assetId = base64.URLEncoding.EncodeToString(bootstrapHex)
-	log.Println(assetId)
-
 	/*if groupKey != "" {
 		groupKeyHex, err := hex.DecodeString(groupKey)
 		if err != nil {
